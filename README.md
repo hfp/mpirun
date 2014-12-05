@@ -1,10 +1,12 @@
 MPIRUN WRAPPER
 ==============
-This script generates a command line for MPIRUN and executes this command line. Optionally it is able to just perform a dry-run printing the generated command line. Other solutions may generate host files describing the execution to be performed by MPIRUN. However, this script generates a command line to be executed on the "head node" of the cluster. There are various options to adjust and tune the behavior. The main purpose of this work is to ease tuning the execution on systems with Intel Xeon Phi coprocessors (an instance of the Intel Many Integrated Core Architecture "MIC"). The script supports both major usage models of Intel Xeon Phi: (1) running MPI ranks directly on the coprocessors a.k.a. symmetric usage model, and (2) running MPI ranks only on the host systems where the ranks may offload work to the attached coprocessors.
+This script generates a command line for MPIRUN and executes this command line. Optionally, the script is able to just perform a dry-run printing the generated command line. Other solutions may generate host files describing the execution to be performed by MPIRUN. However, this script generates a command line to be executed on the login/head node of the cluster. There are various flags to adjust and tune the behavior.
 
-Examples
-========
-Of course, the MPIRUN script is independent of a particular application. For the matter of a specific example, one may run Quantum Espresso using the following command line:
+The main purpose of this work is to ease tuning the execution on systems with Intel Xeon Phi coprocessors (an instance of the Intel Many Integrated Core Architecture "MIC"). The script supports both major usage models of Intel Xeon Phi: (1) running MPI ranks directly on the coprocessors a.k.a. symmetric usage model, and (2) running MPI ranks only on the host systems where the ranks may offload work to the attached coprocessors.
+
+Example
+=======
+The MPIRUN script is independent of a particular application. For the matter of a specific example, one may run <a href="http://quantum-espresso.org/">Quantum Espresso</a> (see also <a href="https://github.com/cdahnken/libxphi">here</a>) using four ranks per socket:
 
 ```sh
 mpirun.sh -p4 \
@@ -13,17 +15,17 @@ mpirun.sh -p4 \
   -i input-file.in
 ```
 
-The above assumes 'mpirun.sh' and 'mpirun.py' to be reachable as well as the runtime environment ready for execution (compiler runtime, and other dependencies). The Shell script further uses the 'micinfo' tool in order to introspect the system for the metrics of coprocessor(s). The latter allows for example to avoid using multiple host sockets in case there is only one coprocessor attached to the system (avoids to perform data transfers to a “remote” coprocessor). Any default provided by the launcher script “mpirun.sh” can be overridden at the command line (still being able to leverage all the other defaults).
+The above assumes 'mpirun.sh' and 'mpirun.py' to be reachable as well as the runtime environment ready for execution (compiler runtime, and other dependencies). The Shell script further relies on the 'micinfo' tool. The latter allows for example to avoid using multiple host sockets in case there is only one coprocessor attached to a dual-socket node (avoids to perform data transfers from/to a “remote” coprocessor). Any default provided by the launcher script “mpirun.sh” can be overridden on the command line (still being able to leverage all the other defaults).
 
 Instructions
 ============
-To receive the command line help of the script run:
+To receive the command line help of the script:
 
 ```sh
 mpirun.sh -h
 ```
 
-In fact, there are currently two scripts 'mpirun.sh' and 'mpirun.py' where the Shell script is provides defaults for the options as exposed by 'mpirun.py'. Anyhow, the previously issued help request would show an output similar to the following:
+In fact, there are currently two scripts 'mpirun.sh' and 'mpirun.py' where the Shell script provides defaults for the many options of 'mpirun.py'. Here is the detailed command line help:
 
 ```
 usage: mpirun.py [-h] [-n NODELIST] [-p CPUPROCS] [-q MICPROCS] [-s NSOCKETS]
@@ -73,8 +75,12 @@ optional arguments:
   -v, --dryrun          dryrun
 ```
 
-Any argument passed at the end of the command line is simply forwarded to the next underlying mechanism if not consumed by option processing. If it is needed to pass arguments to the executable using “<”, one can use the script’s '-i' option, otherwise options for the executable can be simply appended to the command line.
+Any argument passed at the end of the command line is simply forwarded to the next underlying mechanism if not consumed by the option processing. If it is needed to pass arguments to the executable using “<”, one can use the script’s '-i' option, otherwise options for the executable can be simply appended to the command line.
 
 More Details
 ============
-In case of using the offload model, each coprocessor is partitioned according to the host ranks driving that coprocessor. Partitioning the coprocessors leverages the advantages of multi-processing vs. multi-threading even when using the offload model. It is somewhat similar to running MPI ranks on the coprocessor (a.k.a. symmetric usage model) although the MPI ranks are only on the host. To partition the set of threads on each coprocessor into independent sets of threads is achieved by using Intel's KMP_PLACE_THREADS environment variable; an explicit PROCLIST may serve similar purpose. In addition, the environment variable OFFLOAD_DEVICES allows to utilize multiple coprocessors within the same system. This technique leverages MPI ranks on the host for offload model by trading (implicit) barriers at the end of OpenMP* parallel regions against independent executions.
+In case of using the offload model, each coprocessor is partitioned according to the host ranks driving that coprocessor. Partitioning the coprocessors leverages the advantages of multi-processing vs. multi-threading even when using the offload model. It is somewhat similar to running MPI ranks on the coprocessor (a.k.a. symmetric usage model) although the MPI ranks are only on the host.
+
+Partitioning the set of threads on each coprocessor into independent sets of threads is achieved by using Intel's KMP_PLACE_THREADS environment variable; an explicit PROCLIST may serve a similar purpose. In addition, the environment variable OFFLOAD_DEVICES allows to utilize multiple coprocessors within the same system.
+
+The script allows to leverage MPI ranks on the host even for offload model by trading (implicit) barriers at the end of OpenMP* parallel regions against independent executions.
