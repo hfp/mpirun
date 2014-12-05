@@ -15,7 +15,7 @@ mpirun.sh -p4 \
   -i input-file.in
 ```
 
-The above assumes 'mpirun.sh' and 'mpirun.py' to be reachable as well as the runtime environment ready for execution (compiler runtime, and other dependencies). The Shell script further relies on the 'micinfo' tool. The latter allows for example to avoid using multiple host sockets in case there is only one coprocessor attached to a dual-socket node (avoids to perform data transfers from/to a “remote” coprocessor). Any default provided by the launcher script “mpirun.sh” can be overridden on the command line (still being able to leverage all the other defaults).
+The above assumes 'mpirun.sh' and 'mpirun.py' to be reachable as well as the runtime environment ready for execution (compiler runtime, and other dependencies). The Shell script further relies on the 'micinfo' tool to introspect the system hardware. The latter allows for example to avoid using multiple host sockets in case there is only one coprocessor attached to a dual-socket node (avoids to perform data transfers from/to a “remote” coprocessor). Any default provided by the launcher script “mpirun.sh” can be overridden on the command line (still being able to leverage all the other defaults).
 
 Instructions
 ============
@@ -75,7 +75,7 @@ optional arguments:
   -v, --dryrun          dryrun
 ```
 
-Any argument passed at the end of the command line is simply forwarded to the next underlying mechanism if not consumed by the option processing. If it is needed to pass arguments to the executable using “<”, one can use the script’s '-i' option, otherwise options for the executable can be simply appended to the command line.
+Any argument passed at the end of the command line is simply forwarded to the next underlying mechanism if not consumed by the option processing. If it is needed to pass arguments to the executable using '<', one can use the script’s '-i' option, otherwise options for the executable can be simply appended to the command line.
 
 More Details
 ============
