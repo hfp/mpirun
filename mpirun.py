@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 ###############################################################################
-## Copyright (c) 2013-2015, Intel Corporation                                ##
+## Copyright (c) 2014-2015, Intel Corporation                                ##
 ## All rights reserved.                                                      ##
 ##                                                                           ##
 ## Redistribution and use in source and binary forms, with or without        ##
@@ -105,6 +105,8 @@ if (None == args.mri): runstring = runstring \
                     + " -genv " + micenv + "_KMP_AFFINITY=" + args.micaffinity \
                     + " -genv " + micenv + "_OMP_SCHEDULE=" + args.schedule \
                     + " -genv " + micenv + "_OMP_NUM_THREADS=" + str(max((mcores + min(0, args.reserved)) * 4, args.mthreads))
+else: runstring = runstring \
+                    + " -genv I_MPI_MIC=1"
 if (None != args.hr0): runstring = runstring \
                     + " -host " + args.nodelist.split(",")[0] + " -np 1" \
                     + " -env I_MPI_PIN_DOMAIN=auto" \
