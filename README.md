@@ -6,7 +6,7 @@ The main purpose of this work is to ease tuning the execution on systems with In
 
 Example
 =======
-The MPIRUN script is independent of a particular application. For the matter of a specific example, one may run <a href="http://quantum-espresso.org/">Quantum Espresso</a> (see also <a href="https://github.com/cdahnken/libxphi">here</a>) using four ranks per socket:
+The MPIRUN script is independent of a particular application. For the matter of a specific example, one may run [Quantum Espresso](http://quantum-espresso.org/) (see also [here](https://github.com/cdahnken/libxphi)) using four ranks per socket:
 
 ```sh
 mpirun.sh -p4 \
@@ -84,3 +84,10 @@ In case of using the offload model, each coprocessor is partitioned according to
 Partitioning the set of threads on each coprocessor into independent sets of threads is achieved by using Intel's KMP_PLACE_THREADS environment variable; an explicit PROCLIST may serve a similar purpose. In addition, the environment variable OFFLOAD_DEVICES allows to utilize multiple coprocessors within the same system.
 
 The script allows to leverage MPI ranks on the host even for offload model by trading (implicit) barriers at the end of OpenMP* parallel regions against independent executions.
+
+Troubleshooting
+===============
+This section provides an assorted collection of issues and the typical resolution.
+
+* By default, Python 2.6 does not provide the "argparse" module. To install the necessary bits as an ordinary user with no Internet access a.k.a. offline installation, download [ez_setup.py](https://bootstrap.pypa.io/ez_setup.py) ("easy_install") as well as [argparse-1.2.2.tar.gz](https://pypi.python.org/packages/source/a/argparse/argparse-1.2.2.tar.gz) (or newer) to a system with Internet access. Copy the files into a directory accessible for the cluster, and run `/path/to/ez_setup.py --download-base=/path/to/setuptools-7.0.zip --user` followed by `~/.local/bin/easy_install /path/to/argparse-1.2.2.tar`.
+* In a cluster environment, the coprocessors are typically named using the host's host name as a prefix e.g., 'hostname-mic0' (rather than 'mic0'). This naming convention makes absolutely sense in order to address each of the coprocessors as an individual cluster node (symmetric usage model), and with the script's '-z' option this behavior can be easily reproduced. Of course, using the offload model in such a cluster installation still requires the prefixed coprocessor names.
