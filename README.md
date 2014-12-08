@@ -6,13 +6,13 @@ The main purpose of this work is to ease tuning the execution on systems with In
 
 Example
 =======
-The MPIRUN script is independent of a particular application. For the matter of a specific example, one may run [Quantum Espresso](http://quantum-espresso.org/) (see also [here](https://github.com/cdahnken/libxphi)) using four ranks per socket:
+You should be able to successfully run `mpirun.sh -h`. If this is not the case, please have a look at the "Troubleshooting" section (see below). The MPIRUN script is independent of a particular application but for the matter of a specific example, one may run [Quantum Espresso](http://quantum-espresso.org/) (see also [here](https://github.com/cdahnken/libxphi)) using four ranks per socket:
 
 ```sh
 mpirun.sh -p4 \
-  -w <PATH-TO-LIBPXPHI>/xphilibwrapper.sh \
-  -x <PATH-TO-QE>/pw.x \
-  -i input-file.in
+  -w /path/to/xphilibwrapper.sh \
+  -x /path/to/pw.x \
+  -z -i input-file.in
 ```
 
 The above assumes 'mpirun.sh' and 'mpirun.py' to be reachable as well as the runtime environment ready for execution (compiler runtime, and other dependencies). The Shell script further relies on the 'micinfo' tool to introspect the system hardware. The latter allows for example to avoid using multiple host sockets in case there is only one coprocessor attached to a dual-socket node (avoids to perform data transfers from/to a “remote” coprocessor). Any default provided by the launcher script “mpirun.sh” can be overridden on the command line (still being able to leverage all the other defaults).
