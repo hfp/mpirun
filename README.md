@@ -83,7 +83,7 @@ In case of using the offload model, each coprocessor is partitioned according to
 
 Partitioning the set of threads on each coprocessor into independent sets of threads is achieved by using Intel's KMP_PLACE_THREADS environment variable; an explicit PROCLIST may serve a similar purpose. In addition, the environment variable OFFLOAD_DEVICES allows to utilize multiple coprocessors within the same system.
 
-The script allows to leverage MPI ranks on the host even for offload model by trading (implicit) barriers at the end of OpenMP* parallel regions against independent executions.
+The script allows to leverage MPI ranks on the host even for the offload model by trading (implicit) barriers at the end of OpenMP* parallel regions against independent executions.
 
 Troubleshooting
 ===============
