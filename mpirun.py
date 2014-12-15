@@ -100,7 +100,7 @@ runstring = "mpirun -bootstrap ssh"
 if (None == args.mri): runstring = runstring \
                     + " -genv I_MPI_PIN_DOMAIN=auto" \
                     + " -genv OFFLOAD_INIT=on_start" \
-                    + " -genv MIC_USE_2MB_BUFFERS=0" \
+                    + " -genv MIC_USE_2MB_BUFFERS=2m" \
                     + " -genv MIC_ENV_PREFIX=" + micenv \
                     + " -genv " + micenv + "_KMP_AFFINITY=" + args.micaffinity \
                     + " -genv " + micenv + "_OMP_SCHEDULE=" + args.schedule \
