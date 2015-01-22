@@ -49,17 +49,17 @@ else
   echo "Warning: NSOCKETS unknown!"
 fi
 if [[ "" != "${CPUCORES}" ]] ; then
-  FLAG_CPUCORES="-d${CPUCORES}"
+  FLAG_CPUCORES="-e${CPUCORES}"
 else
   echo "Warning: CPUCORES unknown!"
 fi
 if [[ "" != "${NTHREADS}" ]] ; then
-  FLAG_NTHREADS="-e${NTHREADS}"
+  FLAG_NTHREADS="-t${NTHREADS}"
 else
   echo "Warning: NTHREADS unknown!"
 fi
 if [[ "" != "${NDEVICES}" ]] ; then
-  FLAG_NDEVICES="-t${NDEVICES}"
+  FLAG_NDEVICES="-d${NDEVICES}"
 else
   echo "Warning: NDEVICES unknown!"
 fi
