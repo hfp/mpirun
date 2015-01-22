@@ -36,17 +36,29 @@ CPUFLAGS=$(sed -n "s/flags\s*:\s\+\(.\+\)/\1/p" /proc/cpuinfo | sort -u)
 MICINFO=$(micinfo)
 
 NSOCKETS=$(grep "physical id" /proc/cpuinfo | sort -u | wc -l)
-CPUCORES=$(sed -n "0,/cpu cores\s*:\s\+\(.\+\)/s//\1/p" /proc/cpuinfo)
-NTHREADS=$(($(echo $CPUFLAGS | tr " " "\n" | grep -c ht) * 2))
+CPUCORES=$(sed -n "0,/cpu cores\s*:\s\+\([0-9]\+\)/s//\1/p" /proc/cpuinfo)
+NTHREADS=$(($(echo ${CPUFLAGS} | tr " " "\n" | grep -c ht) * 2))
 
-NDEVICES=$(echo "$MICINFO" | grep -c "Device No:")
-MICCORES=$(echo "$MICINFO" | sed -n "0,/\s\+Total No of Active Cores :\s\+\(.\+\)/s//\1/p")
+NDEVICES=$(echo "${MICINFO}" | grep -c "Device No:")
+MICCORES=$(echo "${MICINFO}" | sed -n "0,/\s\+Total No of Active Cores :\s\+\([0-9]\+\)/s//\1/p")
 MTHREADS=4
 
-echo "NSOCKETS=$NSOCKETS CPUCORES=$CPUCORES NTHREADS=$NTHREADS NDEVICES=$NDEVICES MICCORES=$MICCORES MTHREADS=$MTHREADS"
+CHECK=$((${#NSOCKETS}*${#CPUCORES}*${#NTHREADS}*${#NDEVICES}*${#MICCORES}*${#MTHREADS}))
+if [[ "0" = "${CHECK}" ]] ; then
+  echo "Warning: not all defaults could be populated via micinfo!"
+else
+  FLAG_NSOCKETS="-s${NSOCKETS}"
+  FLAG_CPUCORES="-d${CPUCORES}"
+  FLAG_NTHREADS="-e${NTHREADS}"
+  FLAG_NDEVICES="-t${NDEVICES}"
+  FLAG_MICCORES="-m${MICCORES}"
+  FLAG_MTHREADS="-u${MTHREADS}"
+fi
+
+echo "NSOCKETS=${NSOCKETS} CPUCORES=${CPUCORES} NTHREADS=${NTHREADS} NDEVICES=${NDEVICES} MICCORES=${MICCORES} MTHREADS=${MTHREADS}"
 echo
-python $HERE/mpirun.py -s$NSOCKETS -d$NDEVICES -e$CPUCORES -t$NTHREADS -m$MICCORES -u$MTHREADS $*
+python ${HERE}/mpirun.py ${FLAG_NSOCKETS} ${FLAG_NDEVICES} ${FLAG_CPUCORES} $FLAG_NTHREADS ${FLAG_MICCORES} ${FLAG_MTHREADS} $*
 RESULT=$?
 
-exit $RESULT
+exit ${RESULT}
 
