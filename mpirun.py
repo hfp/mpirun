@@ -30,9 +30,15 @@
 ## Hans Pabst, Christopher Dahnken, Intel Corporation                        ##
 ###############################################################################
 import platform
-import argparse
 import sys
 import os
+
+try:
+    import argparse
+except ImportError, e:
+    print 'Failed to import the argparse module: ', e
+    print 'Please follow the troubleshooting instructions at:'
+    print 'https://github.com/hfp/mpirun#troubleshooting'
 
 
 def micshift(i, rcores, ncores, nthreads):
