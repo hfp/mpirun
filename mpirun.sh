@@ -43,21 +43,40 @@ NDEVICES=$(echo "${MICINFO}" | grep -c "Device No:")
 MICCORES=$(echo "${MICINFO}" | sed -n "0,/\s\+Total No of Active Cores :\s\+\([0-9]\+\)/s//\1/p")
 MTHREADS=4
 
-CHECK=$((${#NSOCKETS}*${#CPUCORES}*${#NTHREADS}*${#NDEVICES}*${#MICCORES}*${#MTHREADS}))
-if [[ "0" = "${CHECK}" ]] ; then
-  echo "Warning: not all defaults could be populated via micinfo!"
-else
+if [[ "" != "${NSOCKETS}" ]] ; then
   FLAG_NSOCKETS="-s${NSOCKETS}"
+else
+  echo "Warning: NSOCKETS unknown!"
+fi
+if [[ "" != "${CPUCORES}" ]] ; then
   FLAG_CPUCORES="-d${CPUCORES}"
+else
+  echo "Warning: CPUCORES unknown!"
+fi
+if [[ "" != "${NTHREADS}" ]] ; then
   FLAG_NTHREADS="-e${NTHREADS}"
+else
+  echo "Warning: NTHREADS unknown!"
+fi
+if [[ "" != "${NDEVICES}" ]] ; then
   FLAG_NDEVICES="-t${NDEVICES}"
+else
+  echo "Warning: NDEVICES unknown!"
+fi
+if [[ "" != "${MICCORES}" ]] ; then
   FLAG_MICCORES="-m${MICCORES}"
+else
+  echo "Warning: MICCORES unknown!"
+fi
+if [[ "" != "${MTHREADS}" ]] ; then
   FLAG_MTHREADS="-u${MTHREADS}"
+else
+  echo "Warning: MTHREADS unknown!"
 fi
 
 echo "NSOCKETS=${NSOCKETS} CPUCORES=${CPUCORES} NTHREADS=${NTHREADS} NDEVICES=${NDEVICES} MICCORES=${MICCORES} MTHREADS=${MTHREADS}"
 echo
-python ${HERE}/mpirun.py ${FLAG_NSOCKETS} ${FLAG_NDEVICES} ${FLAG_CPUCORES} $FLAG_NTHREADS ${FLAG_MICCORES} ${FLAG_MTHREADS} $*
+python ${HERE}/mpirun.py ${FLAG_NSOCKETS} ${FLAG_CPUCORES} ${FLAG_NTHREADS} ${FLAG_NDEVICES} ${FLAG_MICCORES} ${FLAG_MTHREADS} $*
 RESULT=$?
 
 exit ${RESULT}
