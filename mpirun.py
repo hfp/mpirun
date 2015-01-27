@@ -134,7 +134,7 @@ for n in args.nodelist.split(","):
                     + " -env " + micenv + "_OMP_SCHEDULE=" + args.schedule
             else: runstring = runstring \
                     + " -env I_MPI_PIN_DOMAIN=auto"
-            runstring = runstring \
+            if (None != args.hri): runstring = runstring \
                     + " " + wrapper + args.hri + arguments \
                     + " :"
     if (None != args.mri):
@@ -150,7 +150,7 @@ for n in args.nodelist.split(","):
                     + " -env OMP_NUM_THREADS=" + str(max(mcores + min(0, args.reserved), args.mthreads) * 4) \
                     + " " + args.mri + arguments \
                     + " :"
-        if (0 < remainder and 0 < cputhreads and 0 < args.cpuprocs): runstring = runstring \
+        if (None != args.hri and 0 < remainder and 0 < cputhreads and 0 < args.cpuprocs): runstring = runstring \
                     + " -host " + n + " -np 1" \
                     + " -env I_MPI_PIN_DOMAIN=auto" \
                     + " -env KMP_AFFINITY=" + args.cpuaffinity \
