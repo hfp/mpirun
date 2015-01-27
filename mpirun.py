@@ -108,7 +108,7 @@ if (None == args.mri): runstring = runstring \
                     + " -genv OFFLOAD_INIT=on_start" \
                     + " -genv MIC_USE_2MB_BUFFERS=2m" \
                     + " -genv MIC_ENV_PREFIX=" + micenv \
-                    + " -genv " + micenv + "_KMP_AFFINITY=" + args.micaffinity \
+                    + " -genv " + micenv + "_KMP_AFFINITY=" + args.micaffinity + ",granularity=fine" \
                     + " -genv " + micenv + "_OMP_SCHEDULE=" + args.schedule \
                     + " -genv " + micenv + "_OMP_NUM_THREADS=" + str(max((mcores + min(0, args.reserved)) * 4, args.mthreads))
 else: runstring = runstring \
@@ -145,7 +145,7 @@ for n in args.nodelist.split(","):
                     + " -env LD_LIBRARY_PATH=$MIC_LD_LIBRARY_PATH" \
                     + " -env I_MPI_PIN=off" \
                     + " -env KMP_PLACE_THREADS=" + micshift(m, args.reserved, mcores, args.mthreads) \
-                    + " -env KMP_AFFINITY=" + args.micaffinity \
+                    + " -env KMP_AFFINITY=" + args.micaffinity + ",granularity=fine" \
                     + " -env OMP_SCHEDULE=" + args.schedule \
                     + " -env OMP_NUM_THREADS=" + str(max(mcores + min(0, args.reserved), args.mthreads) * 4) \
                     + " " + args.mri + arguments \
