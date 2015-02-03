@@ -17,7 +17,7 @@ The above assumes 'mpirun.sh' and 'mpirun.py' to be reachable as well as the run
 
 Instructions
 ============
-To receive the command line help of the script:
+To receive the command line help of the script (see [Troubleshooting](#troubleshooting)) if it does not work):
 
 ```sh
 mpirun.sh -h
