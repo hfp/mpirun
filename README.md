@@ -15,6 +15,8 @@ mpirun.sh -p4 \
 
 The above assumes 'mpirun.sh' and 'mpirun.py' to be reachable as well as the runtime environment ready for execution (compiler runtime, and other dependencies). The Shell script further relies on the 'micinfo' tool to introspect the system hardware. The latter allows for example to avoid using multiple host sockets in case there is only one coprocessor attached to a dual-socket node (avoids to perform data transfers from/to a "remote" coprocessor). Any default provided by the launcher script 'mpirun.sh' can be overridden on the command line (still being able to leverage all the other defaults).
 
+Although the script is not limited the offload usage model, it certainly brings an even higher value to this model due to the more sophisticated MPIRUN command line needed in order to partition the device(s). To leverage offloading work to an Intel Xeon Phi coprocessor, one can have a look at [LIBXSTREAM](https://github.com/hfp/libxstream#libxstream) providing an application programming interface for streams, events, and offload functions.
+
 Instructions
 ============
 To receive the command line help of the script (see [Troubleshooting](#troubleshooting)) if it does not work):
