@@ -89,7 +89,10 @@ if (1 < args.nthreads): args.cpuaffinity = args.cpuaffinity + ",granularity=fine
 
 if (None == args.mri):
     if (sys.maxint == args.reserved): args.reserved = 1
-    cpusockets = min(args.nsockets, args.ndevices)
+    if (0 < args.ndevices):
+        cpusockets = min(args.nsockets, args.ndevices)
+    else:
+        cpusockets = args.nsockets
     nparts = args.cpuprocs
 else:
     if (sys.maxint == args.reserved): args.reserved = 0
